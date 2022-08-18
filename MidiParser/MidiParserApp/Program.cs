@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using CsvHelper;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
@@ -65,7 +66,7 @@ namespace MidiParserApp
 
         }
 
-        private static void ReadParseStatistics(string MAESTRO_ROOT)
+        private static MaestroStatistics ReadParseStatistics(string MAESTRO_ROOT)
         {
             Console.WriteLine("Parser started");
 
@@ -108,30 +109,36 @@ namespace MidiParserApp
                 Console.Write('.');
             }
             Console.WriteLine();
-            
+
 
             // Statistics
-            int minTimeDiff         = allLabelsMerged.Min(label         => label.time_diff);
-            int maxTimeDiff         = allLabelsMerged.Max(label         => label.time_diff);
-            double avgTimeDiff      = allLabelsMerged.Average(label     => label.time_diff);
-            int minLength           = allLabelsMerged.Min(label         => label.length);
-            int maxLength           = allLabelsMerged.Max(label         => label.length);
-            double avgLength        = allLabelsMerged.Average(label     => label.length);
-            int minNoteNumber       = allLabelsMerged.Min(label         => label.note_num);
-            int maxNoteNumber       = allLabelsMerged.Max(label         => label.note_num);
-            double avgNoteNumber    = allLabelsMerged.Average(label     => label.note_num);
-            int minVelocity         = allLabelsMerged.Min(label         => label.note_num);
-            int maxVelocity         = allLabelsMerged.Max(label         => label.note_num);
-            double avgVelocity      = allLabelsMerged.Average(label     => label.note_num);
-            Console.WriteLine($"TimeDiff: min={minTimeDiff}, max={maxTimeDiff}, avg={avgTimeDiff}");
-            Console.WriteLine($"Length: min={minLength}, max={maxLength}, avg={avgLength}");
-            Console.WriteLine($"NoteNumber: min={minNoteNumber}, max={maxNoteNumber}, avg={avgNoteNumber}");
-            Console.WriteLine($"Velocity: min={minVelocity}, max={maxVelocity}, avg={avgVelocity}");
+            var statistics = new MaestroStatistics
+            {
+                MinTimeDiff = allLabelsMerged.Min(label => label.time_diff),
+                MaxTimeDiff = allLabelsMerged.Max(label => label.time_diff),
+                AvgTimeDiff = allLabelsMerged.Average(label => label.time_diff),
+                MinLength = allLabelsMerged.Min(label => label.length),
+                MaxLength = allLabelsMerged.Max(label => label.length),
+                AvgLength = allLabelsMerged.Average(label => label.length),
+                MinNoteNumber = allLabelsMerged.Min(label => label.note_num),
+                MaxNoteNumber = allLabelsMerged.Max(label => label.note_num),
+                AvgNoteNumber = allLabelsMerged.Average(label => label.note_num),
+                MinVelocity = allLabelsMerged.Min(label => label.note_num),
+                MaxVelocity = allLabelsMerged.Max(label => label.note_num),
+                AvgVelocity = allLabelsMerged.Average(label => label.note_num)
+            };
+            Console.WriteLine($"TimeDiff: min={statistics.MinTimeDiff}, max={statistics.MaxTimeDiff}, avg={statistics.AvgTimeDiff}");
+            Console.WriteLine($"Length: min={statistics.MinLength}, max={statistics.MaxLength}, avg={statistics.AvgLength}");
+            Console.WriteLine($"NoteNumber: min={statistics.MinNoteNumber}, max={statistics.MaxNoteNumber}, avg={statistics.AvgNoteNumber}");
+            Console.WriteLine($"Velocity: min={statistics.MinVelocity}, max={statistics.MaxVelocity}, avg={statistics.AvgVelocity}");
             
             Directory.CreateDirectory("results");
-
+            using var stream = File.Create(@"results\statistics.json");
+            JsonSerializer.Serialize(stream, statistics);
 
             Console.WriteLine("Finished");
+
+            return statistics;
         }
 
         private static void ReadParseSave(string MAESTRO_ROOT)
