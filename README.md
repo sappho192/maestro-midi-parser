@@ -11,11 +11,11 @@ This program parses information from the MIDI file and translates into following
 
 | label | type | range | source |
 |---|---|---|---|
-| Time | Integer | 0 < x | raw time |
-| TimeDiff  | Integer | 0 ≤ x | Time - Previous Time |
-| Length  | Integer | 0 < x | Note Off - Note On |
-| NoteNum  | Integer | 0 ≤ x ≤ 127 |  |
-| Velocity  | Integer | 0 ≤ x ≤ 127  |   |
+| Time | Integer | 0 < n | raw time |
+| TimeDiff  | Integer | 0 ≤ n | Time - Previous Time |
+| Length  | Integer | 0 < n | Note Off - Note On |
+| NoteNum  | Integer | 0 ≤ n ≤ 127 |  |
+| Velocity  | Integer | 0 ≤ n ≤ 127  |   |
 
 ### Function
 
