@@ -43,7 +43,7 @@ namespace MidiParserApp
 
         public MIDItoCSV2()
         {
-            fields = $"{nameof(MaestroLabels.time)},{nameof(MaestroLabels.time_diff)},{nameof(MaestroLabels.note_num)},{nameof(MaestroLabels.length)},{nameof(MaestroLabels.velocity)}\n";
+            fields = $"{nameof(MaestroLabels.time)},{nameof(MaestroLabels.time_diff)},{nameof(MaestroLabels.note_num)},{nameof(MaestroLabels.note_num_diff)},{nameof(MaestroLabels.low_octave)},{nameof(MaestroLabels.length)},{nameof(MaestroLabels.velocity)}\n";
             noteInfos = new List<MaestroLabels>();
         }
 
@@ -58,7 +58,7 @@ namespace MidiParserApp
             sb.Append(fields);
             foreach (var item in noteInfos)
             {
-                sb.Append($"{item.time},{item.time_diff},{item.note_num},{item.length},{item.velocity}\n");
+                sb.Append($"{item.time},{item.time_diff},{item.note_num},{item.note_num_diff},{item.low_octave},{item.length},{item.velocity}\n");
             }
 
             File.WriteAllText($"{filename}.csv", sb.ToString());

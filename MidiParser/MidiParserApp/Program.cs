@@ -14,8 +14,8 @@ namespace MidiParserApp
     {
         static void Main(string[] args)
         {
-            //ReadParseSave(@"J:\DATASET\maestro-v3.0.0");
-            ReadParseStatistics(@"J:\DATASET\maestro-v3.0.0");
+            ReadParseSave(@"D:\DATASET\maestro-v3.0.0");
+            //ReadParseStatistics(@"J:\DATASET\maestro-v3.0.0");
             //ReadStandardizeSave();
         }
 
@@ -175,13 +175,29 @@ namespace MidiParserApp
                     var note = midiNotes[i];
                     if(i==0)
                     {
-                        var label = new MaestroLabels { time=(int)note.Time, time_diff = 0, length = (int)note.Length, note_num = note.NoteNumber, velocity = note.Velocity };
+                        var label = new MaestroLabels { 
+                            time=(int)note.Time, 
+                            time_diff = 0, 
+                            length = (int)note.Length, 
+                            note_num = note.NoteNumber, 
+                            note_num_diff = 0,
+                            low_octave = note.NoteNumber < 72 ? 1 : 0,
+                            velocity = note.Velocity 
+                        };
                         csv.Add(label);
                     } else
                     {
                         var prevNote = midiNotes[i - 1];
                         int timeDiff = (int)(note.Time - prevNote.Time);
-                        var label = new MaestroLabels { time = (int)note.Time, time_diff = timeDiff, length = (int)note.Length, note_num = note.NoteNumber, velocity = note.Velocity };
+                        int noteNumDiff = note.NoteNumber - prevNote.NoteNumber;
+                        var label = new MaestroLabels { 
+                            time = (int)note.Time, 
+                            time_diff = timeDiff, 
+                            length = (int)note.Length, 
+                            note_num = note.NoteNumber, 
+                            note_num_diff = noteNumDiff,
+                            low_octave = note.NoteNumber < 72 ? 1 : 0,
+                            velocity = note.Velocity };
                         csv.Add(label);
                     }
                 }
